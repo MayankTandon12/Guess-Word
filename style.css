@@ -1,3 +1,40 @@
 h1{
     text-align: center;
+    font-size: 80px;
+}
+
+.Letters{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    row-gap: 10px;
+    column-gap: 10px;
+    max-width: 500px;
+    margin: auto;
+}
+
+
+.Letter{
+    height: 100px;
+    width: 100px;
+    text-align: center;
+    font-size: 100px;
+    border:  2px solid black;
+    color:  white;
+}
+
+.wrong{
+    background-color: lightgrey;
+
+}
+
+.correct{
+    background-color: green;
+}
+
+.invalid{
+    background-color: red;
+}
+
+.wrong-position{
+    background-color: yellow;
 }
