@@ -18,23 +18,29 @@ h1{
     width: 100px;
     text-align: center;
     font-size: 100px;
-    border:  2px solid black;
-    color:  white;
+    border:  3px solid black;
 }
 
 .wrong{
-    background-color: lightgrey;
+    background-color: grey;
+    color:  white;
 
 }
 
 .correct{
     background-color: green;
+    color:  white;
+
 }
 
 .invalid{
     background-color: red;
+    color:  white;
+
 }
 
 .wrong-position{
     background-color: yellow;
+    color:  white;
+
 }
