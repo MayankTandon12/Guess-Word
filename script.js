@@ -42,7 +42,6 @@ function isCorrectWord(currWord) {
     else {
         for(let i = 0; i < ROW_LENGTH; i++) {
             if (tempCurr.charAt(i) === temp.charAt(i)) {
-                //letter[i + (currCol * ROW_LENGTH)].style.background = 'green';
                 temp = temp.slice(0, i) + " " +temp.slice(i + 1);
                 tempCurr = tempCurr.slice(0, i) + " " + tempCurr.slice(i + 1);
             }
@@ -53,7 +52,6 @@ function isCorrectWord(currWord) {
 
                     if(tempCurr.charAt(i) === " ")
                         letter[i + (currCol * ROW_LENGTH)].style.background = 'green';
-
                     else
                         letter[i+(currCol*ROW_LENGTH)].style.background = 'yellow';
 
@@ -61,17 +59,14 @@ function isCorrectWord(currWord) {
                 }
                 else {
                     letter[i+(currCol*ROW_LENGTH)].style.background = 'grey';
-
                 }
             }
         }
-
     }
 }
 
 
 function getWordOfTheDay() {
-
     const promise = fetch(WORD_URL);
     promise.then(function (resp) {
         return resp.text();
@@ -91,7 +86,6 @@ function endGame() {
     currRow = ROW_LENGTH; // no more words can be entered..
     currCol = COL_LENGTH;
     alert("You Won");
-
 }
 
 
@@ -101,7 +95,6 @@ getWordOfTheDay()
     document.addEventListener("keydown", function keyPress(event) {
         let key = event.key;
         if(isLetter(key)) {
-
             if(currRow < ROW_LENGTH){
                 letter[currRow+(currCol*ROW_LENGTH)].innerHTML = key.toUpperCase();
                 currRow++;
@@ -113,14 +106,11 @@ getWordOfTheDay()
                     currRow = 0;
                     isCorrectWord(currWord);
                     currCol++;
-                    console.log(currCol);
                 }
 
                 if(currCol === COL_LENGTH){
                     alert("You Lost the word was " + wordOfTheDay);
                 }
-
-
         }
 
         else if(key === 'Backspace'){
@@ -129,11 +119,7 @@ getWordOfTheDay()
                 currRow--;
                 letter[currRow + (currCol * ROW_LENGTH)].innerHTML = '';
             }
-
-
         }
-        console.log(event.key);
-
     })
 }
 
