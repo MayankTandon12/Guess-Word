@@ -8,7 +8,7 @@ let currWord = '';
 WORD_URL = "https://words.dev-apis.com/word-of-the-day";
 POST_URL = "https://words.dev-apis.com/validate-word";
 
-let wordOfTheDay='SPACE';
+let wordOfTheDay='';
 
 function isLetter(letter) {
     return /^[a-zA-Z]$/.test(letter);
@@ -33,24 +33,37 @@ function getUserWord() {
 
 function isCorrectWord(currWord) {
     let result = false;
+    let temp = wordOfTheDay;
+    let tempCurr = currWord;
     console.log(currWord);
     console.log(wordOfTheDay);
     if(currWord === wordOfTheDay){
-        for(let i = 0; i < ROW_LENGTH; i++) {
-            letter[i+(currCol*ROW_LENGTH)].style.background = 'green';
-        }
         endGame();
     }
     else {
         for(let i = 0; i < ROW_LENGTH; i++) {
+            if (tempCurr.charAt(i) === temp.charAt(i)) {
+                //letter[i + (currCol * ROW_LENGTH)].style.background = 'green';
+                temp = temp.slice(0, i) + " " +temp.slice(i + 1);
+                tempCurr = tempCurr.slice(0, i) + " " + tempCurr.slice(i + 1);
+            }
+        }
+        for(let i = 0; i < ROW_LENGTH; i++) {
             for(let j = 0; j < ROW_LENGTH; j++) {
-                if(letter[i+(currCol*ROW_LENGTH)].innerHTML === wordOfTheDay.charAt(j)){
-                    letter[i+(currCol*ROW_LENGTH)].style.background = 'yellow';
+                if(tempCurr.charAt(i) === temp.charAt(j)){
+
+                    if(tempCurr.charAt(i) === " ")
+                        letter[i + (currCol * ROW_LENGTH)].style.background = 'green';
+
+                    else
+                        letter[i+(currCol*ROW_LENGTH)].style.background = 'yellow';
+
+                    j= ROW_LENGTH;
                 }
-                // else {
-                //     letter[i+(currCol*ROW_LENGTH)].style.background = 'grey';
-                //
-                // }
+                else {
+                    letter[i+(currCol*ROW_LENGTH)].style.background = 'grey';
+
+                }
             }
         }
 
@@ -73,6 +86,9 @@ function getWordOfTheDay() {
 
 function endGame() {
     //pop up saying you win
+    for(let i = 0; i < ROW_LENGTH; i++) {
+        letter[i+(currCol*ROW_LENGTH)].style.background = 'green';
+    }
     currRow = ROW_LENGTH; // no more words can be entered..
     currCol = COL_LENGTH;
     alert("You Won");
@@ -81,7 +97,7 @@ function endGame() {
 
 
 async function main() {
-//getWordOfTheDay()
+getWordOfTheDay()
 
 
     document.addEventListener("keydown", function keyPress(event) {
@@ -93,17 +109,20 @@ async function main() {
                 currRow++;
             }
         }
-        else if((key === 'Enter') && (currRow === ROW_LENGTH) && (currCol<COL_LENGTH-1)){
+        else if((key === 'Enter') && (currRow === ROW_LENGTH) && (currCol<COL_LENGTH)){
                 currWord = getUserWord();
                 if(validWord(currWord)){
                     currRow = 0;
                     isCorrectWord(currWord);
                     currCol++;
+                    console.log(currCol);
                 }
 
-            else{
-                //you lost word was yeet
-            }
+                if(currCol === COL_LENGTH){
+                    alert("You Lost the word was " + wordOfTheDay);
+                }
+
+
         }
 
         else if(key === 'Backspace'){
