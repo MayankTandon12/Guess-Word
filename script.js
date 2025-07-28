@@ -32,7 +32,6 @@ function getUserWord() {
 
 
 function isCorrectWord(currWord) {
-    let result = false;
     let temp = wordOfTheDay;
     let tempCurr = currWord;
     console.log(currWord);
@@ -98,7 +97,6 @@ function endGame() {
 
 async function main() {
 getWordOfTheDay()
-
 
     document.addEventListener("keydown", function keyPress(event) {
         let key = event.key;
