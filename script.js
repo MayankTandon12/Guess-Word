@@ -75,7 +75,6 @@ function isCorrectWord(currWord) {
                     else {
                         letter[i + (currCol * ROW_LENGTH)].style.background = 'yellow';
                         temp = temp.slice(0, j) + "@" + temp.slice(j + 1);
-                        console.log(temp);
                     }
                     j= ROW_LENGTH;
                 }
