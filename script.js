@@ -4,6 +4,7 @@ let currCol = 0;
 const ROW_LENGTH = 5;
 const COL_LENGTH = 6;
 let currWord = '';
+let validWord = false;
 
 WORD_URL = "https://words.dev-apis.com/word-of-the-day";
 POST_URL = "https://words.dev-apis.com/validate-word";
@@ -16,8 +17,29 @@ function isLetter(letter) {
 
 
 // check if the word is valid
-function validWord(currWord) {
-    return true;
+async function validateWord(currWord) {
+    return  fetch(POST_URL, {
+        method: 'POST', // Specify the HTTP method as POST
+        headers: {
+            'Content-Type': 'application/json', // Indicate the data format
+        },
+        body: JSON.stringify({ // Convert the data to a JSON string for the request body
+            word: currWord,
+        }),
+    })
+       .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json(); // Parse the JSON response
+        })
+        .then(data => {
+            return data.validWord;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+
 }
 
 // gets the current word that user has typed so far
@@ -34,8 +56,6 @@ function getUserWord() {
 function isCorrectWord(currWord) {
     let temp = wordOfTheDay;
     let tempCurr = currWord;
-    console.log(currWord);
-    console.log(wordOfTheDay);
     if(currWord === wordOfTheDay){
         endGame();
     }
@@ -52,9 +72,11 @@ function isCorrectWord(currWord) {
 
                     if(tempCurr.charAt(i) === " ")
                         letter[i + (currCol * ROW_LENGTH)].style.background = 'green';
-                    else
-                        letter[i+(currCol*ROW_LENGTH)].style.background = 'yellow';
-
+                    else {
+                        letter[i + (currCol * ROW_LENGTH)].style.background = 'yellow';
+                        temp = temp.slice(0, j) + "@" + temp.slice(j + 1);
+                        console.log(temp);
+                    }
                     j= ROW_LENGTH;
                 }
                 else {
@@ -74,7 +96,6 @@ function getWordOfTheDay() {
             const objWord = JSON.parse(result);
             wordOfTheDay = objWord.word.toUpperCase();
     })
-
 }
 
 
@@ -83,39 +104,46 @@ function endGame() {
     for(let i = 0; i < ROW_LENGTH; i++) {
         letter[i+(currCol*ROW_LENGTH)].style.background = 'green';
     }
-    currRow = ROW_LENGTH; // no more words can be entered..
+    currRow = ROW_LENGTH; // no more words can be entered.
     currCol = COL_LENGTH;
     alert("You Won");
 }
 
 
-async function main() {
+function main() {
 getWordOfTheDay()
 
-    document.addEventListener("keydown", function keyPress(event) {
+    document.addEventListener("keydown", async function keyPress(event) {
+
+        for (let i = 0; i < ROW_LENGTH; i++) {
+            letter[i + (currCol * ROW_LENGTH)].style.background = 'white';
+        }
+
         let key = event.key;
-        if(isLetter(key)) {
-            if(currRow < ROW_LENGTH){
-                letter[currRow+(currCol*ROW_LENGTH)].innerHTML = key.toUpperCase();
+        if (isLetter(key)) {
+            if (currRow < ROW_LENGTH) {
+                letter[currRow + (currCol * ROW_LENGTH)].innerHTML = key.toUpperCase();
                 currRow++;
             }
-        }
-        else if((key === 'Enter') && (currRow === ROW_LENGTH) && (currCol<COL_LENGTH)){
-                currWord = getUserWord();
-                if(validWord(currWord)){
-                    currRow = 0;
-                    isCorrectWord(currWord);
-                    currCol++;
+        } else if ((key === 'Enter') && (currRow === ROW_LENGTH) && (currCol < COL_LENGTH)) {
+            currWord = getUserWord();
+            validWord = await validateWord(currWord);
+            if (validWord === true) {
+                currRow = 0;
+                isCorrectWord(currWord);
+                currCol++;
+            } else {
+                for (let i = 0; i < ROW_LENGTH; i++) {
+                    letter[i + (currCol * ROW_LENGTH)].style.background = 'red';
                 }
+            }
 
-                if(currCol === COL_LENGTH){
-                    alert("You Lost the word was " + wordOfTheDay);
-                }
-        }
+            if (currCol === COL_LENGTH) {
+                alert("You Lost the word was " + wordOfTheDay);
+            }
+        } else if (key === 'Backspace') {
 
-        else if(key === 'Backspace'){
-
-            if(currRow > 0) {
+            if (currRow > 0) {
                 currRow--;
                 letter[currRow + (currCol * ROW_LENGTH)].innerHTML = '';
             }
