@@ -1,5 +1,4 @@
 const letter = document.querySelectorAll('.Letter');
-editor.focus();
 let currRow = 0;
 let currCol = 0;
 const ROW_LENGTH = 5;
