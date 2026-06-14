@@ -6,4 +6,6 @@ If the leter guessed is on the correct place it turns green, worng place yellow 
 
 if you guess a word and it doesn't exists it turns red.
 
+for now only works on computer not mobile.
+
 Got the API's from Frontend Masters.
